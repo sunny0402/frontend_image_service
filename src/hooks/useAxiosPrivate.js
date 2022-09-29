@@ -1,5 +1,4 @@
-//Hook will attach interceptors to this axios instance
-import axios, { axiosPrivate } from "../api/axios";
+import { axiosPrivate } from "../api/axios";
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
@@ -8,6 +7,7 @@ const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 
+  //Note: hook will attach interceptors to this axios instance
   useEffect(() => {
     //Note: interceptors are like event listeners. but need to attach and remove.
 
@@ -33,11 +33,10 @@ const useAxiosPrivate = () => {
         //Note: sent property indicaes first retry. avoiding infinite loop of 403. only try once.
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;
-          //TODO: error with /refresh
           const newAccessToken = await refresh();
-          //update request with new access token
+          //Note: update request with new access token
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          //call axiosPrivate again with new token
+          //Note: call axiosPrivate again with new token
           return axiosPrivate(prevRequest);
         }
         return Promise.reject(error);
@@ -51,7 +50,6 @@ const useAxiosPrivate = () => {
     };
   }, [auth, refresh]);
 
-  //this hook will return an axiosPrivate instance
   return axiosPrivate;
 };
 

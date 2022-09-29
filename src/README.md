@@ -1,16 +1,26 @@
 ## About
 
-node: v14.15.5
-npm: 8.1.0
+View the site: http://ec2-44-201-119-212.compute-1.amazonaws.com/
+
+App flow: After registration please login. After login will see your uploaded image and email.
+
+Login is not persisted after page reload.
+
+## AWS
+
+Seperate Amazon Linux 2 instances for the frontend and backend.
+MySQL running on backend. The database is used to store user info and the link to the image.
+Image is stored in using AWS S3.
 
 # Authentication:
 
 Auth with JWTs. Access and refresh tokens.
 API send and receive access tokens as JSON data.
-Access token issued after sign in. API verifies access token with middleware every time request is made.
-Front end store access token stored in app memory(app state), not in local storage or cookie.
-Refresh token is also issued after sign in. API verifies refresh token. Reference to refresh token stored in database. Refresh tokens allowed to expire. Or deleted from databse upon logout.
-Refresh token issued in HTTP only cookie. Refresh tokens have expiration and cannot refresh token cannot issue new tokens.
+Access token issued after sign in. API verifies access token with middleware every time a request is made tp the sever.
+Frontend stores access token stored in app memory(app state), not in local storage or cookie.
+Refresh token is also issued after sign in.
+Refresh token stored in httpOnly cookie. Note the axios request have withCredentials: true.
+API verifies refresh token. Reference to refresh token stored in database. Refresh tokens allowed to expire. Or deleted from databse upon logout.
 
 Generate tokens.
 
